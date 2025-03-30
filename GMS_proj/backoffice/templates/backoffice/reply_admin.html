@@ -12,10 +12,10 @@
                 <div class="col-md-12">
                     <div id="chat-container" class="message-box" style="overflow-y: auto;">
                         {% for chat in chats %}
-                        {% if chat.profile.profile_type == "Admin" or chat.profile.profile_type == "Complaint handler(staff)" %}
-
+                        {% if chat.profile.profile_type_id == 1%}
                                 <div class="card chat-message user1" id="user-bg-1">
                             {% else %}
+                                    
                                 <div class="card chat-message user2" id="user-bg-2">
                             {% endif %}
                                 <div class="card-body card-body-very-small">
@@ -30,12 +30,12 @@
             </div>
 
             <div class="row">
-                <form id="registration_form_id" action="{% url 'backoffice:complaints' operation='message' %}?id={{my_complaint_id}}" method="post">
+                <form id="registration_form_id" action="{% url 'backoffice:complaints' operation='message' %}?id={{complaintid}}" method="post">
                     {% csrf_token %}
                 <div class="col-md-12">
                     <div class="input-group mb-3">
                         <input id="message-input" type="text" class="form-control message" placeholder="Message" name="message">
-                        <input type="hidden" class="form-control message" name="complaint_id" value="{{ my_complaint_id }}">
+                        <input type="hidden" class="form-control message" name="complaint_id" value="{{ complaintid }}">
                         <button id="send-btn" type="submit" class="btn send-btn">
                             <i class="fa-solid fa-arrow-right"></i>
                         </button>

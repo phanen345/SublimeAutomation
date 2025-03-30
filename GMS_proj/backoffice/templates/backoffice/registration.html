@@ -9,7 +9,7 @@
         <div class="card-body">
           <h2 class="text-center">Employee Registration</h2><br>
           
-          <form id="registration_form_id" action="{% url 'backoffice:admin_registration' %}" method="post" >
+          <form id="registration_form_id" action="{% url 'backoffice:admin_registration' %}" method="post">
           {% csrf_token %}
             <div class="mb-3">
               <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{ data.name }}" required />
@@ -54,7 +54,7 @@
             </ul>
             {% endif %}
             <hr>
-            <p class="text-center"> Already have an account? <a href="{%url 'user:login' %}">Login</a></p>
+            <p class="text-center"> Already have an account? <a href="{%url 'backoffice:login' %}">Login</a></p>
           </form>
         </div>
       </div>

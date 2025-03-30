@@ -54,11 +54,13 @@ class Profile(models.Model):
         app_label = 'shared_model'
 
 class CreateComplaint(models.Model):
+    id=models.IntegerField(primary_key=True)
     profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
-    subject = models.CharField(max_length=40)
+    subject = models.CharField(max_length=400)
     message = models.CharField(max_length=1000)
     current_handler = models.CharField(max_length=35)
     created_at = models.DateTimeField()
+    updated_at = models.DateTimeField(auto_now=True)
     image=models.URLField()
     class Meta:
         managed = True

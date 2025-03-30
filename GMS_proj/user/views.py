@@ -32,9 +32,12 @@ from django.contrib.auth.middleware import get_user
 ##GOOGLE OAUTH2
 def google_auth(request):
     # Redirect to Google OAuth consent screen
-    google_auth_url = "https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=302465605536-96h22gh6ls1ar65m7pnasiq83gn7j1b5.apps.googleusercontent.com&redirect_uri=http://localhost:8000/auth/google/callback&scope=openid%20email%20profile"
+    google_auth_url = "https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=762745589913-76oh6hhoomkv428f13vp76pcnksupfid.apps.googleusercontent.com&redirect_uri=http://localhost:8000/auth/google/callback&scope=openid%20email%20profile"
     return redirect(google_auth_url)
-
+import requests
+from google.oauth2 import id_token
+from google.auth.transport.requests import Request
+@login_checker
 def google_auth_callback(request):
     code = request.GET.get('code')
     error = request.GET.get('error')
@@ -50,35 +53,36 @@ def google_auth_callback(request):
                 token_url = "https://oauth2.googleapis.com/token"
                 token_data = {
                     'code': code,
-                    'client_id': '302465605536-96h22gh6ls1ar65m7pnasiq83gn7j1b5.apps.googleusercontent.com',
-                    'client_secret': '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',
+                    'client_id': '762745589913-76oh6hhoomkv428f13vp76pcnksupfid.apps.googleusercontent.com',
+                    'client_secret': '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',
                     'redirect_uri': 'http://localhost:8000/auth/google/callback',
                     'grant_type': 'authorization_code',
                 }
                 token_response = requests.post(token_url, data=token_data)
                 id_token_info = id_token.verify_oauth2_token(token_response.json()['id_token'], Request())
-                email=id_token_info.get('email')
-                user = Profile.objects.get(email=email)
-                request.session['is_logged_in'] = True
-                request.session['profile_id'] = user.id
-                request.session['name'] = user.name             
+                email = id_token_info.get('email')
+                
                 if Profile.objects.filter(email=email).exists():
-                    print("EMAIL EXIST IN DB",email) 
+                    user = Profile.objects.get(email=email)
+                    request.session['is_logged_in'] = True
+                    request.session['profile_id'] = user.id
+                    request.session['name'] = user.name             
+                    request.session['profile_type_id'] = user.profile_type_id   
+                    print("EMAIL EXIST IN DB", email) 
                     return redirect("user:dashboard") 
                 else:
-                        # Optionally, you can render an erro
-                        print("Email does not exist in db",email)
-                        password = get_random_string(8)
-                        profile_type="User"
-                        name = id_token_info.get('name')
-                        user=Profile.objects.create(name=name,email=email, password=password,profile_type=profile_type)
-                        print(user)
-                        request.session['is_logged_in'] = True
-                        return redirect("user:dashboard") 
+                    print("Email does not exist in db", email)
+                    password = get_random_string(8)
+                    profile_type_id = 2
+                    name = id_token_info.get('name')
+                    user = Profile.objects.create(name=name, email=email, password=password, profile_type_id=profile_type_id)
+                    print(user)
+                    request.session['is_logged_in'] = True
+                    return redirect("user:dashboard") 
             except Exception as e:
                 print("Exception:", e)
                 return HttpResponseBadRequest("Failed to authenticate with Google.")
-    
+
         else:
             return HttpResponseBadRequest("Authorization code not provided.")
 @auth
@@ -201,7 +205,7 @@ def edit_profile(request):
 def navigation(request):
     return render(request, 'navigation_user.html')
 #########User section############
-
+@auth
 def dashboard(request):
     p_id=request.session.get("profile_id")
     complaints = CreateComplaint.objects.filter(profile_id=p_id)
@@ -236,7 +240,7 @@ def login(request):
             password = request.POST.get('password')
             try:
                 user = Profile.objects.get(email=email)
-                if Profile.objects.filter(email=email).exists() and check_password(password, user.password) and user.profile_type=="User":
+                if Profile.objects.filter(email=email).exists() and check_password(password, user.password) and user.profile_type_id==2:
 
                     request.session['is_logged_in'] = True
                     request.session['email_id'] = user.email
@@ -245,6 +249,8 @@ def login(request):
                     request.session['profile_type_id'] = user.profile_type_id
                     # Check if the provided password matches the hashed password
                     # Both email exists and password matches, redirect to dashboard
+                    print('login function User App')
+                    print(request.session.items())
                     return redirect("user:dashboard") 
                 else:
                     # User with given email doesn't exist
@@ -256,9 +262,10 @@ def login(request):
                 response_data['status'] = 'error'
                 response_data['message'] = ['Invalid Credentials Provided']
                 # response_data['data'] = request.POST
-
+       
+        
         return render(request, 'login.html', response_data)
-@auth
+# @auth
 def logout_view(request):
                 # Clear session data
                 request.session.clear()
@@ -318,7 +325,8 @@ def registration_user(request):
                         hashed_password=make_password(password)
                         # If the email doesn't exist, create a new Profile object
                         profile_type = "User"
-                        user = Profile.objects.create(name=name, mobile=mobile, email=email, password=hashed_password,profile_type=profile_type)
+                        profile_type_id=2
+                        user = Profile.objects.create(name=name, mobile=mobile, email=email, password=hashed_password,profile_type=profile_type,profile_type_id=profile_type_id)
                     else:
                         response_data['status'] = 'error'
                         response_data['message'] = error_msg
@@ -338,16 +346,27 @@ def complaint(request, operation):
              
 
         case 'create':
-                    if request.method== 'POST' and request.session['is_logged_in'] == True and request.FILES['image']:
+                    if request.method == 'POST' and request.session['is_logged_in'] == True or request.FILES.get('image'):
                             # Retrieve the profile_id from the session
-                            print("REQUEST.FILES",request.FILES)
+                            # print("REQUEST.FILES",request.FILES)
                             p_id = request.session.get('profile_id')
                             profile = Profile.objects.get(id=p_id)
+                            complaint=CreateComplaint.objects.filter(profile_id=p_id)
+                            
                             # Now you can use profile_id in this function
                             # For example, print it
                             print("Profile ID:", p_id)
                             print("Profile email:", profile.name)
                             print("Profile mobile:", profile.mobile)
+                            # Get the timezone object for Asia/Kolkata
+                            kolkata_timezone = pytz_timezone('Asia/Kolkata')
+
+                            # Activate Asia/Kolkata timezone
+                            activate(kolkata_timezone)
+
+                            # Get the current time in Asia/Kolkata timezone
+                            current_time_in_raipur = timezone.localtime(timezone.now())
+                            
                             subject=request.POST.get("subject","")
                             message=request.POST.get("message","")
                             error_msg = []
@@ -363,35 +382,40 @@ def complaint(request, operation):
                     
                             if message == '':
                                 error_msg.append('Field Message cannot be Empty.')
-                        
+                            
+                            formatted_date_old=current_time_in_raipur.strftime('%d%m%Y')
+                            # complaint_id_with_date = f"{formatted_date_old}{complaint.id}"
                             if(len(error_msg) == 0):
                                 response_data['status'] = 'success'
                                 response_data['message'] = ['Complaint Registered Successfully.']
                                 response_data['data'] = []
-                                # Get the timezone object for Asia/Kolkata
-                                kolkata_timezone = pytz_timezone('Asia/Kolkata')
-
-                                # Activate Asia/Kolkata timezone
-                                activate(kolkata_timezone)
-
-                                # Get the current time in Asia/Kolkata timezone
-                                current_time_in_raipur = timezone.localtime(timezone.now())
+                            
+                                
                                 # Format the date and time in dd/mm/yyyy hh:mm format
                                 # Assuming current_time_in_raipur is a datetime object
                                 formatted_date_time = current_time_in_raipur.strftime('%Y-%m-%d %H:%M')
                                 
-                                file=request.FILES['image']
-                                fs=FileSystemStorage()
-                                filename=fs.save(file.name,file)
-                                url=fs.url(filename)
-                                
-                                # Save the file path to the model instance
-                                # Convert formatted date time string to datetime object
-                                formatted_date_time_obj = datetime.strptime(formatted_date_time, '%Y-%m-%d %H:%M')
-                                complaint = CreateComplaint.objects.create(profile_id=p_id, subject=subject, message=message,created_at=formatted_date_time,image=url)
-                                print("COMPLAINT CREATED",complaint)
-                                return render(request, 'complaint_user.html', response_data)
-
+                                file=request.FILES.get('image')
+                                if file:
+                                    fs=FileSystemStorage()
+                                    filename=fs.save(file.name,file)
+                                    url=fs.url(filename)
+                                    # formatted_date_time_obj = datetime.strptime(formatted_date_time, '%Y-%m-%d %H:%M')
+                                    
+                                    # Save the file path to the model instance
+                                    
+                                    # Convert formatted date time string to datetime object
+                                    
+                                    complaint = CreateComplaint.objects.create(profile_id=p_id, subject=subject, message=message,created_at=formatted_date_time,image=url,updated_at=formatted_date_time)
+                                    print("COMPLAINT CREATED",complaint)
+                                    # Generate the complaint ID with the date format
+                                    
+                                    return render(request, 'complaint_user.html', response_data)
+                                elif not file:
+                                    url="Null"
+                                    complaint = CreateComplaint.objects.create(profile_id=p_id, subject=subject, message=message,created_at=formatted_date_time,image=url,updated_at=formatted_date_time)
+                                    print("COMPLAINT CREATED",complaint)
+                                    return render(request, 'complaint_user.html', response_data)
                             else:
                                 response_data['status'] = 'error'
                                 response_data['message'] = error_msg
@@ -414,18 +438,30 @@ def complaint(request, operation):
                 complaints = CreateComplaint.objects.filter(profile_id=p_id)
                 return render(request, 'complaint_list_user.html', {'complaints': complaints})
                
-        case 'list':   
-                profile_id = request.GET.get('id')
-                if profile_id is not None:
+        case 'list':
+               complaint_id = request.GET.get('id')
+               request.session['complaint_id'] = complaint_id
+               if complaint_id is not None:
+                print("Working id is", complaint_id)
+                complaint = get_object_or_404(CreateComplaint, id=complaint_id)
+                return render(request, 'specific_complaint.html', {'complaint': complaint})
+               else:
+                p_id = request.session.get('profile_id')
+                print("profile_id",p_id)
+                complaints = CreateComplaint.objects.filter(profile_id=p_id)
+                return render(request, 'complaint_list_user.html', {'complaints': complaints})
+               
+                # profile_id = request.GET.get('id')
+                # if profile_id is not None:
                     
-                    complaints = CreateComplaint.objects.filter(profile_id=profile_id)
+                #     complaints = CreateComplaint.objects.filter(profile_id=profile_id)
 
-                    return render(request, 'complaint_list_user.html', {'complaints': complaints}) 
-                else:
-                    ###if id matches with the complaint created those complaints only show it to the user
+                #     return render(request, 'complaint_list_user.html', {'complaints': complaints}) 
+                # else:
+                #     ###if id matches with the complaint created those complaints only show it to the user
                     
-                    complaints = CreateComplaint.objects.all()
-                    return render(request, 'complaint_list_user.html', {'complaints': complaints})  
+                #     complaints = CreateComplaint.objects.all()
+                #     return render(request, 'complaint_list_user.html', {'complaints': complaints})  
         case 'message':
             #request.session['is_logged_in'] = True
             profile_id = request.session.get('profile_id')
@@ -456,7 +492,7 @@ def complaint(request, operation):
 
 
             return render(request, 'user/reply_user.html',{'complaintid':complaint_id,'chats': chat})
-        
+
 
 # def change_password(request):
 #     if request.method == 'POST':

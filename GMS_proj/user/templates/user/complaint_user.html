@@ -26,7 +26,11 @@
             <ul class="messages">
               {% for info in message%}
               {%if "Complaint Registered Successfully." in info%}
-              <li class="text-success">{{ info }}</li>
+              <li class="text-success">
+                {{ info }}
+                <br>
+                
+            </li>
               {% else %}
               <li class="text-danger">{{ info }}</li>
               {% endif %}

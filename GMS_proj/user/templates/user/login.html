@@ -36,8 +36,8 @@
                                     Please enter a valid password.
                                 </div>
                             </div>
-                         <div class="oauth-buttons">
-                                <a href="{% url 'user:google_auth' %}" class="gmail-button">Login with Gmail</a>
+                         <div class="oauth-buttons" >
+                                <img src="{% static 'google-img.png' %}" style="width:2vw;"><a href="{% url 'user:google_auth' %}" class="gmail-button" style="text-decoration:none;">Login with Gmail</a>
                             </div> 
                             <div class="mb-3 forgot-password">
                                 <a href="{% url 'user:forgot_password' %}" class="text-danger">

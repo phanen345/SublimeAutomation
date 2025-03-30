@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib import messages
 from textblob import TextBlob
+# from transformers import pipeline
+# from langdetect import detect
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -14,10 +16,10 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.contrib.auth.models import User
 from social_django.models import UserSocialAuth
-from django.utils import timezone
+from django.utils import timezone 
 from datetime import datetime
 from pytz import timezone as pytz_timezone
-from django.utils.timezone import activate
+from django.utils.timezone import activate, localtime, now as django_now
 # from django.contrib.auth.decorators import login_required
 @auth_b
 def profile(request):
@@ -92,7 +94,6 @@ def employee_add(request):
             password = request.POST.get('password','')
             confirm_password = request.POST.get('confirm_password','')
           
-
             error_msg = []
 
             response_data = {
@@ -135,7 +136,8 @@ def employee_add(request):
                 response_data['data'] = []
                 hashed_password=make_password(password)
                 # If the email doesn't exist, create a new Profile object
-                user = Profile.objects.create(name=name, mobile=mobile, email=email, password=hashed_password)
+                profile_type_id=1
+                user = Profile.objects.create(name=name, mobile=mobile, email=email, password=hashed_password,profile_type_id=profile_type_id)
             else:
                 response_data['status'] = 'error'
                 response_data['message'] = error_msg
@@ -166,7 +168,7 @@ def login_page(request ,response_data=None):
                 password = request.POST.get('password')
                 try:
                     user = Profile.objects.get(email=email)
-                    if Profile.objects.filter(email=email).exists() and check_password(password, user.password) and (user.profile_type == "Complaint handler(Staff)" or user.profile_type=="Admin"):
+                    if Profile.objects.filter(email=email).exists() and check_password(password, user.password) and user.profile_type_id == 1:
                         request.session['is_logged_in'] = True
                         request.session['email_id'] = user.email
                         request.session['profile_id'] = user.id
@@ -245,8 +247,10 @@ def admin_registration(request):
                 response_data['message'] = ['Employee Registered Successfully.']
                 response_data['data'] = []
                 hashed_password=make_password(password)
+                profile_type="Admin"
+                profile_type_id=1
                 # If the email doesn't exist, create a new Profile object
-                user = Profile.objects.create(name=name, mobile=mobile, email=email, password=hashed_password)
+                user = Profile.objects.create(name=name, mobile=mobile, email=email, password=hashed_password,profile_type=profile_type,profile_type_id=profile_type_id)
             else:
                 response_data['status'] = 'error'
                 response_data['message'] = error_msg
@@ -261,18 +265,21 @@ def admin_registration(request):
 def complaint(request, operation):
      match operation:
         case 'delete':
-               profile_id = request.GET.get("id")
+               complaint_id = request.GET.get("id")
                
-               print("Profile ID LATEST",profile_id)
-               profile = get_object_or_404(Profile,id =profile_id)
-               profile.delete()
-               print("PROFILE DATA After",profile)
-         
-               
-               return render (request,"backoffice/complaint_list.html")
+               print("Complaint ID LATEST",complaint_id)
+               complaint = get_object_or_404(CreateComplaint,id =complaint_id)
+               complaint.delete()
+               operation = 'view'  # Set the operation value
+
+               # Generate the URL using reverse and pass the operation as an argument
+               url = reverse('backoffice:complaints', kwargs={'operation': operation})
+
+               # Redirect to the generated URL
+               return redirect(url)
             
         case 'message':
-            complaint_id=request.GET.get("complaint_id")
+            complaint_id=request.GET.get("id")
             # complaint_messages = get_object_or_404(ComplaintMessage,id =complaint_id)
                 
            
@@ -303,7 +310,7 @@ def complaint(request, operation):
                  chat = ComplaintMessage.objects.filter(complaint_id=complaint_id)
 
 
-            return render(request, 'backoffice/reply_admin.html',{'chats': chat})
+            return render(request, 'backoffice/reply_admin.html',{'complaintid':complaint_id,'chats': chat})
           
         case 'view':
             print("case view")
@@ -338,6 +345,8 @@ def complaint(request, operation):
                     blob = TextBlob(text)
                     sentiment_score = blob.sentiment.polarity
                     complaint.sentiment = 'Positive' if sentiment_score > 0 else 'Negative' if sentiment_score < 0 else 'Neutral'
+                    # Re-fetch the complaints ordered by created_at to ensure order after update
+                    print(complaint_id)
                 return render(request, 'backoffice/complaint_list.html', {'complaints': complaints})
         case 'employee_list':
                 employees = Profile.objects.all()
@@ -360,7 +369,7 @@ def complaint(request, operation):
                             }
                             if current_handler == '':
                                 error_msg.append('Field Current Handler cannot be empty.')
-                            complaints = CreateComplaint.objects.get(id=complaint_id)
+                            
                             # if complaint_id is not None:
                             #     # Fetch the existing profile if it exists
                             #     try:
@@ -370,8 +379,15 @@ def complaint(request, operation):
                             #         complaint = None
                             print(error_msg)
                             if(len(error_msg) == 0):
-                                
+                                complaints = CreateComplaint.objects.get(id=complaint_id)
+                                 # Get the timezone object for Asia/Kolkata
+                                kolkata1_timezone = pytz_timezone('Asia/Kolkata')
+
+                                # Activate Asia/Kolkata timezone
+                                activate(kolkata1_timezone)
+                                current_time_in_india = timezone.localtime(timezone.now())
                                 complaints.current_handler = current_handler
+                                complaints.updated_at = current_time_in_india
                                 complaints.save()     
                                 
                                 response_data['status'] = 'success'

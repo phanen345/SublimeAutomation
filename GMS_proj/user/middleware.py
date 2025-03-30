@@ -31,9 +31,17 @@ def auth(view_function):
         if 'is_logged_in' not in request.session:
               request.session['is_logged_in'] = False
               return redirect('user:login')
-        else:
-             if request.session['is_logged_in'] == False:   
+        elif 'is_logged_in' in request.session:
+            if request.session['is_logged_in'] == False:   
                 return redirect('user:login')
+            
+            
+        # if 'profile_type_id' in request.session:
+        #     if request.session['profile_type_id'] == 1 : 
+        #         print("condition checked TRUE .................")
+        #         return redirect('backoffice:login')
+        # else :
+        #     return redirect('user:login')
         
         return view_function(request, *args, **kwargs)
     return wrapped_view

@@ -11,7 +11,7 @@
             
             <div id="chat-container" class="message-box" style="overflow-y: auto;">
                 {% for chat in chats %}
-                            {% if chat.profile.profile_type == "Admin" or chat.profile.profile_type == "Complaint handler(staff)" %}
+                            {% if chat.profile.profile_type_id == 1%}
                                 <div class="card chat-message user1" id="user-bg-1">
                             {% else %}
                                 <div class="card chat-message user2" id="user-bg-2">

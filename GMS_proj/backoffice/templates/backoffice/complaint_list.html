@@ -10,11 +10,11 @@
         <div class="table-wrapper">
       <table id="example" class="table table-striped table-bordered">
         <thead>
-          <tr>
+          <tr >
             <th scope="col"style="width:10vw;">S No</th>
             <th scope="col"style="width:15vw;">Name</th>
             <th scope="col"style="width:10vw;">Phone No</th>
-            <th scope="col" style="width:40vw; text-align: center;">Current Handler</th>
+            <th scope="col" style="width:10vw; text-align: center;">Current Handler</th>
             <th scope="col"style="width:10vw;">created_at</th>
             <th scope="col"style="width:10vw;">updated_at</th>
             <th scope="col"style="width:10vw;">Sentiment</th>
@@ -41,7 +41,7 @@
                   <i class="fa-solid fa-reply"></i>
                 </button>
 
-              <button type="button" class="btn btn-danger" onclick="deleteProfile({{ complaint.profile.id }})"><i class="far fa-trash-alt"></i></button>
+              <button type="button" class="btn btn-danger" onclick="deleteProfile({{ complaint.id }})"><i class="far fa-trash-alt"></i></button>
             </div>
           </td>
          
@@ -65,7 +65,7 @@
     }
     function deleteProfile(complaint_id) {
       // Redirect to the detail page with employeeId
-      window.location.href = "{% url 'backoffice:complaints' operation='delete' %}";
+      window.location.href = "{% url 'backoffice:complaints' operation='delete'%}?id="+ complaint_id;
   }
   </script>
  {% endblock %}

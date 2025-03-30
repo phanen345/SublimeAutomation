@@ -13,7 +13,41 @@ body {
 .mynav {
     color: #fff;
 }
+#send-btn {
+    display: inline;
+    position: relative;
+    padding: 12px 22px;
+    background-color: rgba(15, 36, 56);
+    color: white;
+    border-radius: 50%; /* Make it a circle */
+    border: none; /* Remove border */
+    cursor: pointer;
+    margin-left:2px; /* Show cursor as pointer */
+}
+#send-btn i{
+    font-size: 22px;
+}
+#registration_form_id .message {
+    width: 300px; /* Adjust this value to increase the width */
+    background-color: #FEECE2;
+    border: none;
+    box-shadow: 0px 0px 2px;
+}
+#registration_form_id .message .user {
+    width: 300px; /* Adjust this value to increase the width */
+    background-color: #FEECE2;
+    border: none;
+    box-shadow: 0px 0px 2px;
+}
 
+
+
+#reply-msg-box{
+    position:relative;
+    bottom:5.5vh;
+    width:60%;
+    left:5.5vw
+}
 .mynav li a {
     color: #fff;
     text-decoration: none;
@@ -47,17 +81,57 @@ body {
 
 #bdSidebar {
     min-width: 340px;
-    background: linear-gradient(to bottom, #3498db, #000000);
+    background: linear-gradient(to bottom, #06356e, #031023);
+
+
+
+    z-index: 5;
+    box-shadow: 5px 5px 20px black;
+    
+
+}
+.base{
+    background-color:white;
 
 }
 
 .bg-success {
-    background: linear-gradient(to bottom, #3498db, #000000);
+    background: linear-gradient(to bottom, #165782, #165782);
 }
 
-#content {
-    padding: 20px;
+
+.top-bar{
+    background-color: rgba(15, 36, 56); 
+    
+   
+    height:10vh;
+    position:sticky;
+    padding:10px;
+    top:0;
+    box-shadow: 0 0 3px black;
+   
+
 }
+.top-bar h7{
+    color:white;
+  padding:20px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+.top-bar p{
+    color:white;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    letter-spacing: 2px;
+    font-size:10px;
+    padding-left:15px;
+
+}
+.bar {
+    height:1vh;
+   
+   
+    background-color: yellow;
+}
+
 /* ---------------------compliant reply section -----------------*/
 html,
 body {
@@ -85,6 +159,15 @@ body {
     border-radius: 5px;
     padding: 8px 5px;
 }
+/* logout button----------------- */
+.mynav li  {
+    color: #fff;
+    text-decoration: none;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+    padding: 8px 5px;
+}
 
 .mynav li a.active {
     background: rgba(255, 255, 255, 0.2);
@@ -99,6 +182,7 @@ body {
     text-align: center;
 }
 
+
 .notification-badge {
     background-color: rgba(255, 255, 255, 0.7);
     float: right;
@@ -108,19 +192,30 @@ body {
     border-radius: 2px;
 }
 
-#bdSidebar {
-    min-width: 340px;
-    background: linear-gradient(to bottom, #3498db, #000000);
 
-}
 
-.bg-success {
-    background: linear-gradient(to bottom, #3498db, #000000);
-}
+
 
 #content {
-    padding: 20px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
+
 }
+.heading {
+    left: 50%;
+    width: 100%; /* Ensure the heading takes full width */
+    padding: 30px 0; /* Optional: Add padding for better spacing */
+    text-align: center;
+    position: sticky;
+    top: 0;
+    background-color:white; /* Set background color as needed */
+    z-index: 2; /* Set a high z-index to ensure it's on top of other content */
+  
+}
+
+
 
 
 .card {
@@ -131,8 +226,10 @@ body {
     border-radius: .55rem;
     position: relative;
     width: 100%;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+    box-shadow: 2px 2px 2px 10px rgba(41, 141, 139, 0.1);
 }
+
+/* /////////////////////// */
 .chat-app .people-list {
     width: 280px;
     position: absolute;
@@ -377,17 +474,10 @@ body {
 }
 /* -----------------Close-compliant reply section -----------------*/
 
-<<<<<<< HEAD
-.submit{
-    color:black;
-    background-color: blue;
-    
-}
-=======
 .container {
-     
+    margin-left:10px;
     overflow: auto; /* Add overflow property for the scrollbar */
-    max-height:95vh; /* Set a maximum height for the container */
+    max-height:100vh; /* Set a maximum height for the container */
   }
 
   p {
@@ -397,9 +487,6 @@ body {
     margin: 0; /* Remove default margin for better styling */
   }
 
- 
-  
-
   .container::-webkit-scrollbar-thumb {
     background-color: transparent;
   }
@@ -408,4 +495,516 @@ body {
     float: right;
 
   }
->>>>>>> e0234a7ec98d353b76678ea6f0b461e22b61c8cc
+
+  /* ---------------------password filed formatting */
+input{
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+  }
+
+/* Add a green border when passwords match */
+.match {
+    border: 2px solid green;
+}
+
+/* Add a red border when passwords do not match */
+.no-match {
+    border: 2px solid red;
+}
+.forgot-password a{
+    text-decoration: none;
+}
+
+/* Dashboard Details */
+ 
+.container-dashboard-admin{
+display: flex;
+justify-content: space-around;
+margin-top: 20px;
+}
+
+
+.dashboard-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+   
+}
+
+
+.dashboard-heading > div:first-child {
+    flex: 1; 
+
+}
+
+.dashboard-heading > div:last-child {
+    margin-left:20px; 
+    padding-right:20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* complaint dashboard  */
+.box {
+  
+    background: rgb(32,122,221);
+    background: linear-gradient(90deg, rgb(184, 188, 188) 17%, rgb(26, 32, 31) 89%);
+    color: #ffffff; 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    cursor: pointer; 
+    height: 150px; /* Set a fixed height */
+    width: 300px; 
+    
+
+  
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+}
+.box h2{
+    color: rgba(15, 36, 56);
+    font-size: 22px;
+    text-align: end;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    vertical-align: bottom; /* Align text to the bottom */
+    padding-left:10px;
+    
+}
+/* chat section input field  */
+.input-group .message{
+    width:300px;
+    background-color:#FEECE2;
+}
+#employee-box1{
+    background: linear-gradient(135deg,#f3f77d, #ffffff);
+   
+
+}
+.box i{
+    margin-left:-10px;
+    font-size: 55px;
+    color: #4b572d;
+ 
+}
+#employee-box1 h1{
+    color: rgb(62, 68, 73);
+    
+}
+#employee-box2 h1{
+    color: rgb(62, 68, 73);
+    
+}
+#employee-box3 h1{
+    color: rgb(62, 68, 73);
+    
+}
+#employee-box2{
+    background: linear-gradient(135deg,#f3f77d, #ffffff);
+    
+}
+#employee-box2 h2{
+    margin-left:-10px;
+}
+#employee-box3{
+    background: linear-gradient(135deg,#f3f77d, #ffffff);
+      
+}
+#user-bg-1{
+    float:left;
+}
+#user-bg-2{
+    float: right;
+}
+
+
+
+
+
+
+#user2{
+    background-color: cyan;
+}
+.box2 {
+ 
+    display:flex;
+    top: 10%; /* Adjust as needed */
+    right: 20px; 
+    margin-left: 22px;/* Adjust as needed */
+    position: sticky;
+    
+}
+#update-btn{
+    margin-left:10px;
+    
+    
+}
+
+
+
+
+.box:hover {
+    transform: translateY(-11px); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
+    background-color: #e0e0e0; 
+    transition: 2 ease;
+    box-shadow: multiple 0 0 10px rgba(0,0,0,0.5);
+}
+.container-dashboard-admin a{
+    text-decoration:none;
+}
+.table-wrapper {
+    background-color: #ffffff;
+    padding:20px 40px;
+    border-radius: 15px;
+
+
+}
+
+/* 
+Responsive  */
+@media (max-width: 768px) {
+    .box {
+      height: 100px; /* Adjust height for smaller screens */
+      width: 100px; /* Adjust width for smaller screens */
+    }
+  }
+
+
+
+  .scrollable-content {
+    height: calc(100vh - 100px); /* Adjust the height as needed */
+    overflow-y: auto;
+}
+
+/* -------------Button employees add-------------------- */
+
+.add-employee-btn {
+    background: linear-gradient(90deg, rgb(51, 125, 194) 17%, rgb(26, 32, 31) 89%);
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 3px 3px 5px black;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease, background-position 0.3s ease; 
+    background-size: 200% auto;
+}
+.add-employee-btn a{
+    text-decoration:none;
+    color:white;
+}
+
+.add-employee-btn:hover {
+    background-position: right center, left center; /* Moves blue to right and black to left */
+    transform: scale(1.04); /* Increases the size on hover */
+}
+
+  
+  .icon {
+    font-size: 20px;
+    margin-right: 5px;
+  }
+  /* showing the chat section */
+  .message-box {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    max-height: 400px; /* Adjust height as needed */
+    overflow-x: hidden; /* Enable vertical scroll if content exceeds height */
+    overflow-y: auto;
+}
+
+.chat-bubble-admin {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-bottom: 10px;
+}
+
+.chat-bubble-user {
+    display: flex;
+    flex-direction:row;
+    margin-right: -50px;
+    color:green;
+    
+}
+.msg-text{
+    font-size: smaller;
+}
+.msg-time{
+    font-size: x-small;
+}
+
+.profile-id {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.message {
+    background-color: #e5f3ff;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 93%;
+    word-wrap: break-word;
+
+}
+
+
+
+.sender .message {
+    background-color: #d6e8c4;
+}
+
+
+.receiver .message {
+    background-color: #e5f3ff;
+}
+
+/* employee Reply button and update Button */
+
+/* Style for form labels */
+form label {
+    display: block; /* Make labels appear on their own line */
+    margin-bottom: 5px; /* Add some space between labels and inputs */
+    font-weight: bold;
+    color:#0f2438; /* Make labels bold */
+}
+
+/* Style for text box input fields */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form textarea {
+    width: 100%; /* Make input fields take up full width of their container */
+    padding: 10px; /* Add padding inside input fields */
+    border: 1px solid #ccc; /* Add border to input fields */
+    border-radius: 5px; /* Add border radius for rounded corners */
+    margin-bottom: 10px; /* Add some space between input fields */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+
+form input[type="submit"] {
+    background-color: #007bff; 
+    color: #fff; /* Customize text color for submit button */
+    border: none; /* Remove border for submit button */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    padding: 10px 20px; /* Add padding to submit button */
+    border-radius: 5px; /* Add border radius for rounded corners */
+}
+
+form input[type="submit"]:hover {
+    background-color: #0056b3; /* Change background color on hover */
+}
+
+fieldset{
+   border-radius: 10px;
+}
+
+
+
+tbody tr:hover {
+    background-color: #e2e6ea;
+}
+
+
+table tr:hover td {
+    background-color: #d3d9df; 
+}
+
+/* chat section style -----------------------------------------------*/
+  
+   .message-box {
+    margin-bottom: 20px;
+}
+
+.chat-message {
+    width: 20vw;
+}
+
+.msg-text {
+    margin-bottom: 0;
+}
+
+  .chat-heading {
+   
+   
+    margin-bottom: 20px;
+}
+
+.message-box {
+    border: none;
+   
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #FEECE2;
+    margin-bottom: 20px;
+    height: 90vh;
+    
+ 
+}
+
+
+.chat-message {
+    border: none;
+    box-shadow: inner 0px 0px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    
+}
+
+#send-btn {
+    transition: all 0.3s ease;
+    animation: pulse 1s infinite;
+    border-radius: 50px;
+    margin-top: -10px;
+    
+    padding:2px 25px;
+}
+
+
+.send-btn:hover {
+    transform: scale(1.1);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.send-btn i {
+    margin-left: 5px;
+}
+
+.form-control::placeholder {
+    color: #999;
+    font-weight: bold;
+    border-width: 5px;
+}
+
+/* chat bubble below */
+/* .message-box .user1{
+    background-color: #FA7070;
+   
+    box-shadow: 1px 1px 3px ;
+    border-radius: 50px 50px 50px 0px;
+    
+    
+} */
+.message-box  h6{
+    color:white;
+    font-size:17px;
+   
+}
+.message-box  p {
+    color:white;
+    font-size:15px;
+}
+
+/* .admin-message {
+    
+    float: right;
+    background-color: #9c3838;
+    box-shadow: 1px 1px 3px  black ;
+    color:white;
+    border-radius: 50px 50px 0px 50px;
+    
+}
+.user-message {
+    background-color: #3498db; /* Blue background for user messages */
+    /* color: white;
+    float: left;
+    background-color: #FA7070;
+   
+    box-shadow: 1px 1px 3px ;
+    border-radius: 50px 50px 50px 0px;
+     */
+
+ 
+
+
+
+/* /* .user1_u{
+    background-color: #9c3838;
+    box-shadow: 1px 1px 3px  black ;
+    color:white;
+    border-radius: 50px 50px 0px 50px;
+    border-radius: 50px 50px 0px 50px; /* Rounded corners */
+    /* float: right; Align messages from user 2 to the right
+    clear: both;  */
+
+
+/* .user2_u{
+    background-color: #FA7070;
+   
+    box-shadow: 1px 1px 3px ;
+    border-radius: 50px 50px 50px 0px;
+    border-radius: 50px 50px 50px 0px; /* Rounded corners */
+    /* Align messages from user 1 to the left */
+    /* clear: both;
+
+}   */
+
+
+/* Add this CSS to your existing stylesheet or create a new one */
+
+.message-box {
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: 400px; /* Limit the height of the chat box */
+}
+
+.chat-message {
+    margin: 10px; /* Add margin around each message */
+    border-radius: 10px; /* Rounded corners for message boxes */
+    max-width: 70%; /* Limit the width of the message box */
+}
+
+.user1 {
+    background-color: #FA7070;
+   color: white;
+    box-shadow: 1px 1px 3px black;
+    border-radius: 50px 50px 50px 0px;
+    clear:both;
+    position: relative;
+    left:0px;
+    
+    /* float: left; Align user messages to the left */
+}
+
+.user2 {
+   
+    background-color: #9c3838;
+    box-shadow: 1px 1px 3px  black ;
+    color:white;
+    border-radius: 50px 50px 0px 50px;
+    position:relative;
+    right:0px;
+   /* Rounded corners */
+    /* float: right; Align messages from user 2 to the right */
+    clear: both; 
+    /* Align admin messages to the right */
+}
+
+
