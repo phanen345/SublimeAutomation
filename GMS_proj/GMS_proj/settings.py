@@ -152,14 +152,7 @@ AUTHENTICATION_BACKENDS = [
     
 ]
 
-# OAUTH2_PROVIDER = {
-#     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'openid': 'OpenID scope'},
-#     'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
-#     'CLIENT_SECRET_GENERATOR_CLASS': 'oauth2_provider.generators.ClientSecretGenerator',
-# }
 
-# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '121742523439-s30kcv1je7lg798uen7rd4ntk1oagh39.apps.googleusercontent.com'
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 # LOGIN_REDIRECT_URL = 'user:login_with_google'
 # #LOGIN_REDIRECT_URL = '/user/dashboard/'
